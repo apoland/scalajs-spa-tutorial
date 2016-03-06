@@ -33,3 +33,5 @@ If you are using Scala IDE, you need to set additional settings to get your Ecli
 set EclipseKeys.skipParents in ThisBuild := false
 eclipse
 ```
+
+# Test
