@@ -3,14 +3,24 @@
 # ~~~~
 
 # Home page
-GET     /                                 controllers.Application.index
+GET         /                                controllers.ApplicationController.index
+GET         /signIn                          controllers.ApplicationController.signIn
+GET         /signUp                          controllers.ApplicationController.signUp
+GET         /signOut                         controllers.ApplicationController.signOut
+GET         /authenticate/:provider          controllers.SocialAuthController.authenticate(provider)
+POST        /authenticate/credentials        controllers.CredentialsAuthController.authenticate
+POST        /signUp                          controllers.SignUpController.signUp
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/fonts/*file               controllers.Assets.at(path="/public/lib/font-awesome/fonts", file)
 GET     /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
 
+GET         /webjars/*file                   controllers.WebJarAssets.at(file)
+
+
+
 # Autowire calls
-POST    /api/*path                        controllers.Application.autowireApi(path: String)
+POST    /api/*path                        controllers.ApplicationController.autowireApi(path: String)
 
 # Logging
-POST /logging                             controllers.Application.logging
+POST /logging                             controllers.ApplicationController.logging

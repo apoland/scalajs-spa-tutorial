@@ -58,7 +58,8 @@ lazy val server = (project in file("server"))
     scalaJSProjects := clients,
     pipelineStages := Seq(scalaJSProd, digest, gzip),
     // compress CSS
-    LessKeys.compress in Assets := true
+    LessKeys.compress in Assets := true,
+      routesGenerator := InjectedRoutesGenerator
   )
   .enablePlugins(PlayScala)
   .disablePlugins(PlayLayoutPlugin) // use the standard directory layout instead of Play's custom
@@ -78,6 +79,7 @@ lazy val ReleaseCmd = Command.command("release") {
 }
 
 // lazy val root = (project in file(".")).aggregate(client, server)
+
 
 // loads the Play server project at sbt startup
 onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value

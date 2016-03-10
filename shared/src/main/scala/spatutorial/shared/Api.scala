@@ -12,4 +12,9 @@ trait Api {
 
   // delete a Todo
   def deleteTodo(itemId: String): Seq[TodoItem]
+
+  def getMessages(): Seq[MessageItem]
+  def updateMessage(item: MessageItem): Seq[MessageItem]
+  def deleteMessage(itemId: String): Seq[MessageItem]
+
 }

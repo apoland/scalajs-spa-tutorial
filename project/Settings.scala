@@ -1,5 +1,6 @@
 import sbt._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import play.sbt.Play.autoImport._
 
 /**
  * Application settings. Configure the build for your application here.
@@ -54,7 +55,16 @@ object Settings {
   val jvmDependencies = Def.setting(Seq(
     "com.vmunier" %% "play-scalajs-scripts" % versions.playScripts,
     "org.webjars" % "font-awesome" % "4.3.0-1" % Provided,
-    "org.webjars" % "bootstrap" % versions.bootstrap % Provided
+    "org.webjars" % "bootstrap" % versions.bootstrap % Provided,
+    "org.webjars" %% "webjars-play" % "2.4.0-1",
+    "com.twilio.sdk" % "twilio-java-sdk" % "3.4.5",
+    "com.mohiva" %% "play-silhouette" % "3.0.0",
+    "net.codingwell" %% "scala-guice" % "4.0.0",
+    "net.ceedubs" %% "ficus" % "1.1.2",
+    "com.adrianhurt" %% "play-bootstrap3" % "0.4.4-P24",
+    cache,
+    filters
+ 
     //,"org.webjars.npm" % "react" % versions.react
   ))
 

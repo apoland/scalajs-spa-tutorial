@@ -1,11 +1,11 @@
 package spatutorial.client.modules
 
-import diode.react._
+import diode.react.ModelProxy
 import diode.data.Pot
-import japgolly.scalajs.react.ReactComponentB
+import japgolly.scalajs.react.{ReactComponentC, ReactComponentB}
 import japgolly.scalajs.react.extra.router.RouterCtl
 import japgolly.scalajs.react.vdom.prefix_<^._
-import spatutorial.client.SPAMain.{Loc, TodoLoc}
+import spatutorial.client.SPAMain.{MessagesLoc, Loc, TodoLoc}
 import spatutorial.client.components._
 import spatutorial.client.services.RootModel
 
@@ -24,9 +24,11 @@ object Dashboard {
         <.h2("Dashboard"),
         // use connect from ModelProxy to give Motd only partial view to the model
         proxy.connect(m => m)(Motd(_)),
+        <.h3("A calendar/list view of upcoming events goes here"),
         Chart(cp),
         // create a link to the To Do view
-        <.div(router.link(TodoLoc)("Check your todos!"))
+        <.div(router.link(TodoLoc)("Check your todos!")),
+          <.div(router.link(MessagesLoc)("Check your messages!"))
       )
     }.build
 
