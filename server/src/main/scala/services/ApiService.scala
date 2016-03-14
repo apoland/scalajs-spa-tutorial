@@ -5,35 +5,45 @@ import java.util.{UUID, Date}
 import spatutorial.shared._
 
 class ApiService extends Api {
-  var todos = Seq(
-    TodoItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Wear shirt that says “Life”. Hand out lemons on street corner.", TodoLow, false),
-    TodoItem("2", 0x61626364, "Make vanilla pudding. Put in mayo jar. Eat in public.", TodoNormal, false),
-    TodoItem("3", 0x61626364, "Walk away slowly from an explosion without looking back.", TodoHigh, false),
-    TodoItem("4", 0x61626364, "Sneeze in front of the pope. Get blessed.", TodoNormal, true)
+  var members = Seq(
+    MemberItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Andrew Poland", "317-270-0251", false),
+    MemberItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Bob Dole", "317-222-2222", false),
+  MemberItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Teeve Torbes", "317-333-3333", false),
+  MemberItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Turd Furgeson", "317-555-1212", false)
+
   )
 
   override def welcome(name: String): String =
     s"Welcome to Red Card Robot, $name! Time is now ${new Date}"
 
   var messages = Seq(
-    MessageItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Message 1", MessageLow, false),
-    MessageItem("2", 0x61626364, "Message 2", MessageNormal, false),
-    MessageItem("3", 0x61626364, "Message 3", MessageHigh, false),
-    MessageItem("4", 0x61626364, "Message 4.", MessageNormal, true)
+    MessageItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Reminder: RCR Rehearsal 3 is in three days! - Sent to ALL", MessageLow, false),
+    MessageItem("2", 0x61626364, "Reminder: RCR Rehearsal 4 is in three days! - Sent to ALL", MessageNormal, false),
+    MessageItem("3", 0x61626364, "Are you still coming to Game 1 on 3/19?  Reply YES or NO.  - Sent to ALL", MessageHigh, false),
+    MessageItem("4", 0x61626364, "Are you still coming to Game 2 on 4/2?  Reply YES or NO.  - Sent to ALL", MessageNormal, true)
   )
 
-  override def getTodos(): Seq[TodoItem] = {
+  var events = Seq(
+    EventItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Rehearsal 1", EventLow, false),
+    EventItem("2", 0x61626364, "Rehearsal 2", EventNormal, false),
+    EventItem("5", 0x61626364, "Rehearsal 3", EventLow, false),
+    EventItem("6", 0x61626364, "Rehearsal 4", EventNormal, false),
+    EventItem("3", 0x61626364, "Game 1", EventHigh, false),
+    EventItem("4", 0x61626364, "Game 2", EventNormal, true)
+  )
+
+  override def getTodos(): Seq[MemberItem] = {
     // provide some fake Todos
     Thread.sleep(300)
-    println(s"Sending ${todos.size} Todo items")
-    todos
+    println(s"Sending ${members.size} Todo items")
+    members
   }
 
   // update a Todo
-  override def updateTodo(item: TodoItem): Seq[TodoItem] = {
+  override def updateTodo(item: MemberItem): Seq[MemberItem] = {
     // TODO, update database etc :)
-    if(todos.exists(_.id == item.id)) {
-      todos = todos.collect {
+    if(members.exists(_.id == item.id)) {
+      members = members.collect {
         case i if i.id == item.id => item
         case i => i
       }
@@ -41,19 +51,19 @@ class ApiService extends Api {
     } else {
       // add a new item
       val newItem = item.copy(id = UUID.randomUUID().toString)
-      todos :+= newItem
+      members :+= newItem
       println(s"Todo item was added: $newItem")
     }
     Thread.sleep(300)
-    todos
+    members
   }
 
   // delete a Todo
-  override def deleteTodo(itemId: String): Seq[TodoItem] = {
+  override def deleteTodo(itemId: String): Seq[MemberItem] = {
     println(s"Deleting item with id = $itemId")
     Thread.sleep(300)
-    todos = todos.filterNot(_.id == itemId)
-    todos
+    members = members.filterNot(_.id == itemId)
+    members
   }
 
 
@@ -90,5 +100,42 @@ class ApiService extends Api {
     messages = messages.filterNot(_.id == itemId)
     messages
   }
+
+
+  override def getEvents(): Seq[EventItem] = {
+    Thread.sleep(300)
+    println(s"Sending ${events.size} Event items")
+    events
+  }
+
+
+
+  // delete a Event
+  override def deleteEvent(itemId: String): Seq[EventItem] = {
+    println(s"Deleting event with id = $itemId")
+    Thread.sleep(300)
+    events = events.filterNot(_.id == itemId)
+    events
+  }
+
+  // update a Event
+  override def updateEvent(item: EventItem): Seq[EventItem] = {
+    if(events.exists(_.id == item.id)) {
+      events = events.collect {
+        case i if i.id == item.id => item
+        case i => i
+      }
+      println(s"Event item was updated: $item")
+    } else {
+      // add a new item
+      val newItem = item.copy(id = UUID.randomUUID().toString)
+      events :+= newItem
+      println(s"Event item was added: $newItem")
+    }
+    Thread.sleep(300)
+    events
+  }
+
+
 
 }

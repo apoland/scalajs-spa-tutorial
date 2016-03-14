@@ -23,13 +23,17 @@ object Motd {
         // render messages depending on the state of the Pot
         proxy().renderPending(_ => <.p("Loading...")),
         proxy().renderFailed(ex => <.p("Failed to load")),
-        proxy().render(m => <.p(m)),
-        Button(Button.Props(proxy.dispatch(UpdateMotd()), CommonStyle.danger), Icon.refresh, " Update")
+        proxy().render(m => <.p(m))
+      //  Button(Button.Props(proxy.dispatch(UpdateMotd()), CommonStyle.danger), Icon.refresh, " Update")
       )
     }
     .componentDidMount(scope =>
       // update only if Motd is empty
-      Callback.ifTrue(scope.props.value.isEmpty, scope.props.dispatch(UpdateMotd()))
+      {
+        println("Here")
+        Callback.ifTrue(scope.props.value.isEmpty, scope.props.dispatch(UpdateMotd()))
+      }
+
     )
     .build
 

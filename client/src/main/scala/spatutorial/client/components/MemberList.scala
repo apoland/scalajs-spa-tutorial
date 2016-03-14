@@ -6,31 +6,32 @@ import spatutorial.client.components.Bootstrap.{CommonStyle, Button}
 import spatutorial.shared._
 import scalacss.ScalaCssReact._
 
-object TodoList {
+object MemberList {
   // shorthand for styles
   @inline private def bss = GlobalStyles.bootstrapStyles
 
   case class TodoListProps(
-    items: Seq[TodoItem],
-    stateChange: TodoItem => Callback,
-    editItem: TodoItem => Callback,
-    deleteItem: TodoItem => Callback
+                            items: Seq[MemberItem],
+                            stateChange: MemberItem => Callback,
+                            editItem: MemberItem => Callback,
+                            deleteItem: MemberItem => Callback
   )
 
-  private val TodoList = ReactComponentB[TodoListProps]("TodoList")
+  private val MemberList = ReactComponentB[TodoListProps]("MemberList")
     .render_P(proxy => {
       val style = bss.listGroup
-      def renderItem(item: TodoItem) = {
+      def renderItem(item: MemberItem) = {
         // convert priority into Bootstrap style
-        val itemStyle = item.priority match {
+        /*val itemStyle = item.priority match {
           case TodoLow => style.itemOpt(CommonStyle.info)
           case TodoNormal => style.item
           case TodoHigh => style.itemOpt(CommonStyle.danger)
         }
-        <.li(itemStyle,
-          <.input.checkbox(^.checked := item.completed, ^.onChange --> proxy.stateChange(item.copy(completed = !item.completed))),
+        */
+        <.li(style.item,
+          //<.input.checkbox(^.checked := item.completed, ^.onChange --> proxy.stateChange(item.copy(completed = !item.completed))),
           <.span(" "),
-          if (item.completed) <.s(item.content) else <.span(item.content),
+          if (item.completed) <.s(item.name) else <.span(item.name),
           Button(Button.Props(proxy.editItem(item), addStyles = Seq(bss.pullRight, bss.buttonXS)), "Edit"),
           Button(Button.Props(proxy.deleteItem(item), addStyles = Seq(bss.pullRight, bss.buttonXS)), "Delete")
         )
@@ -39,6 +40,6 @@ object TodoList {
     })
     .build
 
-  def apply(items: Seq[TodoItem], stateChange: TodoItem => Callback, editItem: TodoItem => Callback, deleteItem: TodoItem => Callback) =
-    TodoList(TodoListProps(items, stateChange, editItem, deleteItem))
+  def apply(items: Seq[MemberItem], stateChange: MemberItem => Callback, editItem: MemberItem => Callback, deleteItem: MemberItem => Callback) =
+    MemberList(TodoListProps(items, stateChange, editItem, deleteItem))
 }

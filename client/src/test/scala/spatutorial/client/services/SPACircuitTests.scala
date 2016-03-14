@@ -10,13 +10,13 @@ object SPACircuitTests extends TestSuite {
   def tests = TestSuite {
     'TodoHandler - {
       val model = Ready(Todos(Seq(
-        TodoItem("1", 0, "Test1", TodoLow, false),
-        TodoItem("2", 0, "Test2", TodoLow, false),
-        TodoItem("3", 0, "Test3", TodoHigh, true)
+        MemberItem("1", 0, "Test1", TodoLow, false),
+        MemberItem("2", 0, "Test2", TodoLow, false),
+        MemberItem("3", 0, "Test3", TodoHigh, true)
       )))
 
       val newTodos = Seq(
-        TodoItem("3", 0, "Test3", TodoHigh, true)
+        MemberItem("3", 0, "Test3", TodoHigh, true)
       )
 
       def build = new TodoHandler(new RootModelRW(model))
@@ -40,7 +40,7 @@ object SPACircuitTests extends TestSuite {
 
       'UpdateTodoAdd - {
         val h = build
-        val result = h.handle(UpdateTodo(TodoItem("4", 0, "Test4", TodoNormal, false)))
+        val result = h.handle(UpdateTodo(MemberItem("4", 0, "Test4", TodoNormal, false)))
         result match {
           case ModelUpdateEffect(newValue, effects) =>
             assert(newValue.get.items.size == 4)
@@ -53,7 +53,7 @@ object SPACircuitTests extends TestSuite {
 
       'UpdateTodo - {
         val h = build
-        val result = h.handle(UpdateTodo(TodoItem("1", 0, "Test111", TodoNormal, false)))
+        val result = h.handle(UpdateTodo(MemberItem("1", 0, "Test111", TodoNormal, false)))
         result match {
           case ModelUpdateEffect(newValue, effects) =>
             assert(newValue.get.items.size == 3)

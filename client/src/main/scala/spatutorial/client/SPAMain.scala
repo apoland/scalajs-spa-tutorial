@@ -35,8 +35,8 @@ object SPAMain extends js.JSApp {
 
     // wrap/connect components to the circuit
     (staticRoute(root, DashboardLoc) ~> renderR(ctl => SPACircuit.wrap(_.motd)(proxy => Dashboard(ctl, proxy)))
-      | staticRoute("#todo", TodoLoc) ~> renderR(ctl => SPACircuit.connect(_.todos)(Todo(_)))
-      | staticRoute("#events", EventsLoc) ~> renderR(ctl => SPACircuit.connect(_.messages)(Message(_)))
+      | staticRoute("#todo", TodoLoc) ~> renderR(ctl => SPACircuit.connect(_.todos)(Member(_)))
+      | staticRoute("#events", EventsLoc) ~> renderR(ctl => SPACircuit.connect(_.events)(Event(_)))
       | staticRoute("#messages", MessagesLoc) ~> renderR(ctl => SPACircuit.connect(_.messages)(Message(_)))
       ).notFound(redirectToPage(DashboardLoc)(Redirect.Replace))
   }.renderWith(layout)
@@ -60,7 +60,9 @@ object SPAMain extends js.JSApp {
   }
 
   def buildCounters(model: RootModel): Counters = {
-     Counters(model.todos.map(_.items.count(!_.completed)).toOption, model.messages.map(_.items.count(!_.completed)).toOption)
+     Counters(model.todos.map(_.items.count(!_.completed)).toOption,
+       model.messages.map(_.items.count(!_.completed)).toOption,
+       model.events.map(_.items.count(!_.completed)).toOption)
   }
 
   @JSExport

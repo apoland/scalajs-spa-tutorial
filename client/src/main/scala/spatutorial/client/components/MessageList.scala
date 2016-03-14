@@ -22,15 +22,9 @@ object MessageList {
       val style = bss.listGroup
       def renderItem(item: MessageItem) = {
         // convert priority into Bootstrap style
-        val itemStyle = item.priority match {
-          case MessageLow => style.itemOpt(CommonStyle.info)
-          case MessageNormal => style.item
-          case MessageHigh => style.itemOpt(CommonStyle.danger)
-        }
-        <.li(itemStyle,
-          <.input.checkbox(^.checked := item.completed, ^.onChange --> p.stateChange(item.copy(completed = !item.completed))),
-          <.span(" "),
-          if (item.completed) <.s(item.content) else <.span(item.content),
+
+        <.li(style.item,
+           <.span(item.content),
           Button(Button.Props(p.editItem(item), addStyles = Seq(bss.pullRight, bss.buttonXS)), "Edit"),
           Button(Button.Props(p.deleteItem(item), addStyles = Seq(bss.pullRight, bss.buttonXS)), "Delete")
         )

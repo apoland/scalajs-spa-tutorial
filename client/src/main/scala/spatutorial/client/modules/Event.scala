@@ -13,64 +13,64 @@ import spatutorial.shared._
 
 import scalacss.ScalaCssReact._
 
-object Message {
+object Event {
 
-  case class Props(proxy: ModelProxy[Pot[Messages]])
+  case class Props(proxy: ModelProxy[Pot[Events]])
 
-  case class State(selectedItem: Option[MessageItem] = None, showMessageForm: Boolean = false)
+  case class State(selectedItem: Option[EventItem] = None, showEventForm: Boolean = false)
 
   class Backend($: BackendScope[Props, State]) {
     def mounted(props: Props) =
-    // dispatch a message to refresh the Messages, which will cause Messagestore to fetch Messages from the server
-      Callback.ifTrue(props.proxy().isEmpty, props.proxy.dispatch(RefreshMessages))
+    // dispatch a message to refresh the Events, which will cause Eventstore to fetch Events from the server
+      Callback.ifTrue(props.proxy().isEmpty, props.proxy.dispatch(RefreshEvents))
 
-    def editMessage(item: Option[MessageItem]) =
+    def editEvent(item: Option[EventItem]) =
     // activate the edit dialog
-      $.modState(s => s.copy(selectedItem = item, showMessageForm = true))
+      $.modState(s => s.copy(selectedItem = item, showEventForm = true))
 
-    def MessageEdited(item: MessageItem, cancelled: Boolean) = {
+    def EventEdited(item: EventItem, cancelled: Boolean) = {
       val cb = if (cancelled) {
         // nothing to do here
-        Callback.log("Message editing cancelled")
+        Callback.log("Event editing cancelled")
       } else {
-        Callback.log(s"Message edited: $item") >>
-          $.props >>= (_.proxy.dispatch(UpdateMessage(item)))
+        Callback.log(s"Event edited: $item") >>
+          $.props >>= (_.proxy.dispatch(UpdateEvent(item)))
       }
       // hide the edit dialog, chain callbacks
-      cb >> $.modState(s => s.copy(showMessageForm = false))
+      cb >> $.modState(s => s.copy(showEventForm = false))
     }
 
     def render(p: Props, s: State) =
-      Panel(Panel.Props("Sent Messages"), <.div(
+      Panel(Panel.Props("Upcoming Events"), <.div(
         p.proxy().renderFailed(ex => "Error loading"),
         p.proxy().renderPending(_ > 500, _ => "Loading..."),
-        p.proxy().render(Messages => MessageList(Messages.items, item => p.proxy.dispatch(UpdateMessage(item)),
-          item => editMessage(Some(item)), item => p.proxy.dispatch(DeleteMessage(item)))),
-        Button(Button.Props(editMessage(None)), Icon.plusSquare, " New")),
+        p.proxy().render(Events => EventList(Events.items, item => p.proxy.dispatch(UpdateEvent(item)),
+          item => editEvent(Some(item)), item => p.proxy.dispatch(DeleteEvent(item)))),
+        Button(Button.Props(editEvent(None)), Icon.plusSquare, " New")),
         // if the dialog is open, add it to the panel
-        if (s.showMessageForm) MessageForm(MessageForm.Props(s.selectedItem, MessageEdited))
+        if (s.showEventForm) EventForm(EventForm.Props(s.selectedItem, EventEdited))
         else // otherwise add an empty placeholder
           Seq.empty[ReactElement])
   }
 
   // create the React component for To Do management
-  val component = ReactComponentB[Props]("Message")
-    .initialState(State()) // initial state from Messagestore
+  val component = ReactComponentB[Props]("Event")
+    .initialState(State()) // initial state from Eventstore
     .renderBackend[Backend]
     .componentDidMount(scope => scope.backend.mounted(scope.props))
     .build
 
   /** Returns a function compatible with router location system while using our own props */
-  def apply(proxy: ModelProxy[Pot[Messages]]) = component(Props(proxy))
+  def apply(proxy: ModelProxy[Pot[Events]]) = component(Props(proxy))
 }
 
-object MessageForm {
+object EventForm {
   // shorthand for styles
   @inline private def bss = GlobalStyles.bootstrapStyles
 
-  case class Props(item: Option[MessageItem], submitHandler: (MessageItem, Boolean) => Callback)
+  case class Props(item: Option[EventItem], submitHandler: (EventItem, Boolean) => Callback)
 
-  case class State(item: MessageItem, cancelled: Boolean = true)
+  case class State(item: EventItem, cancelled: Boolean = true)
 
   class Backend(t: BackendScope[Props, State]) {
     def submitForm(): Callback = {
@@ -84,23 +84,23 @@ object MessageForm {
 
     def updateDescription(e: ReactEventI) = {
       val text = e.target.value
-      // update MessageItem content
+      // update EventItem content
       t.modState(s => s.copy(item = s.item.copy(content = text)))
     }
 
     def updatePriority(e: ReactEventI) = {
-      // update MessageItem priority
+      // update EventItem priority
       val newPri = e.currentTarget.value match {
-        case p if p == MessageHigh.toString => MessageHigh
-        case p if p == MessageNormal.toString => MessageNormal
-        case p if p == MessageLow.toString => MessageLow
+        case p if p == EventHigh.toString => EventHigh
+        case p if p == EventNormal.toString => EventNormal
+        case p if p == EventLow.toString => EventLow
       }
       t.modState(s => s.copy(item = s.item.copy(priority = newPri)))
     }
 
     def render(p: Props, s: State) = {
-      log.debug(s"User is ${if (s.item.id == "") "adding" else "editing"} a Message or two")
-      val headerText = if (s.item.id == "") "Add new Message" else "Edit Message"
+      log.debug(s"User is ${if (s.item.id == "") "adding" else "editing"} a Event or two")
+      val headerText = if (s.item.id == "") "Add new Event" else "Edit Event"
       Modal(Modal.Props(
         // header contains a cancel button (X)
         header = hide => <.span(<.button(^.tpe := "button", bss.close, ^.onClick --> hide, Icon.close), <.h4(headerText)),
@@ -116,17 +116,17 @@ object MessageForm {
           <.label(^.`for` := "priority", "Priority"),
           // using defaultValue = "Normal" instead of option/selected due to React
           <.select(bss.formControl, ^.id := "priority", ^.value := s.item.priority.toString, ^.onChange ==> updatePriority,
-            <.option(^.value := MessageHigh.toString, "High"),
-            <.option(^.value := MessageNormal.toString, "Normal"),
-            <.option(^.value := MessageLow.toString, "Low")
+            <.option(^.value := EventHigh.toString, "High"),
+            <.option(^.value := EventNormal.toString, "Normal"),
+            <.option(^.value := EventLow.toString, "Low")
           )
         )
       )
     }
   }
 
-  val component = ReactComponentB[Props]("MessageForm")
-    .initialState_P(p => State(p.item.getOrElse(MessageItem("", 0, "", MessageNormal, false))))
+  val component = ReactComponentB[Props]("EventForm")
+    .initialState_P(p => State(p.item.getOrElse(EventItem("", 0, "", EventNormal, false))))
     .renderBackend[Backend]
     .build
 

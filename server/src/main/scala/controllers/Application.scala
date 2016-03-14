@@ -38,7 +38,7 @@ class ApplicationController @Inject()
   }
   */
 
-  def index = SecuredAction.async { implicit request =>
+  def index = Action.async { implicit request =>
     Future.successful(Ok(views.html.index("SPA tutorial")))
   }
 
@@ -78,10 +78,10 @@ class ApplicationController @Inject()
     env.authenticatorService.discard(request.authenticator, result)
   }
 
-  def autowireApi(path: String) = SecuredAction.async(parse.raw) {
+  def autowireApi(path: String) = Action.async(parse.raw) {
     implicit request =>
       println(s"Request path: $path")
-      println(s"User: ${request.identity.loginInfo}")
+      //println(s"User: ${request.identity.loginInfo}")
 
       // get the request body as Array[Byte]
       val b = request.body.asBytes(parse.UNLIMITED).get

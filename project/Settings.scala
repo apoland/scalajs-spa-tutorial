@@ -85,6 +85,8 @@ object Settings {
     "org.webjars" % "jquery" % versions.jQuery / "jquery.js" minified "jquery.min.js",
     "org.webjars" % "bootstrap" % versions.bootstrap / "bootstrap.js" minified "bootstrap.min.js" dependsOn "jquery.js",
     "org.webjars" % "chartjs" % versions.chartjs / "Chart.js" minified "Chart.min.js",
-    "org.webjars" % "log4javascript" % versions.log4js / "js/log4javascript_uncompressed.js" minified "js/log4javascript.js"
+    "org.webjars" % "log4javascript" % versions.log4js / "js/log4javascript_uncompressed.js" minified "js/log4javascript.js",
+	"org.webjars" % "momentjs" % "2.12.0" / "moment.js" minified "min/moment.min.js" dependsOn "jquery.js",
+	"org.webjars" % "fullcalendar" % "2.6.1" / "fullcalendar.js" minified "fullcalendar.min.js" dependsOn "moment.js"
   ))
 }

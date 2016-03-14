@@ -10,10 +10,87 @@
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <link rel="stylesheet" media="screen" href=@_asset("stylesheets/main.min.css") >
         <link rel="shortcut icon" type="image/png" href=@_asset("images/favicon.png") >
+
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.6.1/fullcalendar.min.css"/>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.6.1/fullcalendar.print.css"/>
+        <style>
+
+        body {
+        margin: 40px 10px;
+        padding: 0;
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        font-size: 14px;
+        }
+
+        #calendar {
+        max-width: 900px;
+        margin: 0 auto;
+        }
+
+        </style>
     </head>
     <body>
         <div id="root">
         </div>
+
+        <div class="container">
+            <div id="calendar"></div>
+        </div>
+
+
+
         @playscalajs.html.scripts(projectName = "client", fileName => _asset(fileName).toString)
     </body>
+
+    <script>
+            $(document).ready(function() {
+
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay'
+                    },
+                    defaultDate: '2016-03-14',
+                    editable: true,
+                    eventLimit: true, // allow "more" link when too many events
+                    events: [
+
+                        {
+                            id: 999,
+                            title: 'Rehearsal 1',
+                            start: '2016-03-09T19:00:00'
+                        },
+                        {
+                            id: 999,
+                            title: 'Rehearsal 2',
+                            start: '2016-03-16T19:00:00'
+                        },
+                        {
+                            id: 999,
+                            title: 'Rehearsal 3',
+                            start: '2016-03-23T19:00:00'
+                        },
+                        {
+                            id: 999,
+                            title: 'Rehearsal 4',
+                            start: '2016-03-30T19:00:00'
+                        },
+                        {
+                            id: 999,
+                            title: 'Game 1',
+                            start: '2016-03-19T19:00:00'
+                        },
+                        {
+                            id: 999,
+                            title: 'Game 2',
+                            start: '2016-04-02T19:00:00'
+                        }
+
+                    ]
+                });
+
+            });
+    </script>
+
 </html>

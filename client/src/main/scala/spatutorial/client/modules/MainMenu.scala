@@ -18,7 +18,7 @@ object MainMenu {
   @inline private def bss = GlobalStyles.bootstrapStyles
 
 
-  case class Counters(todos: Option[Int], messages: Option[Int])
+  case class Counters(todos: Option[Int], messages: Option[Int], events: Option[Int])
 
   case class Props(router: RouterCtl[Loc], currentLoc: Loc, proxy: ModelProxy[Counters])
 
@@ -28,24 +28,24 @@ object MainMenu {
   private def buildMembersMenu(props: Props): ReactElement = {
     val todoCount = props.proxy().todos.getOrElse(0)
     <.span(
-      <.span("Members "),
-      todoCount > 0 ?= <.span(bss.labelOpt(CommonStyle.danger), bss.labelAsBadge, todoCount)
+      <.span("Members ")
+      //todoCount > 0 ?= <.span(bss.labelOpt(CommonStyle.danger), bss.labelAsBadge, todoCount)
     )
   }
 
   private def buildEventsMenu(props: Props): ReactElement = {
-    val messageCount = props.proxy().messages.getOrElse(0)
+    val eventCount = props.proxy().events.getOrElse(0)
     <.span(
-      <.span("Events "),
-      messageCount > 0 ?= <.span(bss.labelOpt(CommonStyle.danger), bss.labelAsBadge, messageCount)
+      <.span("Events ")
+      //messageCount > 0 ?= <.span(bss.labelOpt(CommonStyle.danger), bss.labelAsBadge, messageCount)
     )
   }
 
   private def buildMessagesMenu(props: Props): ReactElement = {
     val messageCount = props.proxy().messages.getOrElse(0)
     <.span(
-      <.span("Messages "),
-      messageCount > 0 ?= <.span(bss.labelOpt(CommonStyle.danger), bss.labelAsBadge, messageCount)
+      <.span("Messages ")
+      //messageCount > 0 ?= <.span(bss.labelOpt(CommonStyle.danger), bss.labelAsBadge, messageCount)
     )
   }
 
@@ -67,6 +67,11 @@ object MainMenu {
       Callback.ifTrue(props.proxy.value.messages.isEmpty, props.proxy.dispatch(RefreshMessages))
     }
 
+    def mountedEvents(props: Props) = {
+      // dispatch a message to refresh the messages
+      Callback.ifTrue(props.proxy.value.events.isEmpty, props.proxy.dispatch(RefreshEvents))
+    }
+
     def render(props: Props) = {
       <.ul(bss.navbar)(
         // build a list of menu items
@@ -83,6 +88,7 @@ object MainMenu {
     .renderBackend[Backend]
     .componentDidMount(scope => scope.backend.mountedTodos(scope.props))
     .componentDidMount(scope => scope.backend.mountedMessages(scope.props))
+    .componentDidMount(scope => scope.backend.mountedEvents(scope.props))
     .build
 
   def apply(ctl: RouterCtl[Loc], currentLoc: Loc, proxy: ModelProxy[Counters]): ReactElement =

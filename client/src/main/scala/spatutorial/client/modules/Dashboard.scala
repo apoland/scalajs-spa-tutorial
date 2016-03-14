@@ -20,15 +20,8 @@ object Dashboard {
   private val component = ReactComponentB[Props]("Dashboard")
     .render_P { case Props(router, proxy) =>
       <.div(
-        // header, MessageOfTheDay and chart components
-        <.h2("Dashboard"),
         // use connect from ModelProxy to give Motd only partial view to the model
-        proxy.connect(m => m)(Motd(_)),
-        <.h3("A calendar/list view of upcoming events goes here"),
-        Chart(cp),
-        // create a link to the To Do view
-        <.div(router.link(TodoLoc)("Check your todos!")),
-          <.div(router.link(MessagesLoc)("Check your messages!"))
+        proxy.connect(m => m)(Motd(_))
       )
     }.build
 
